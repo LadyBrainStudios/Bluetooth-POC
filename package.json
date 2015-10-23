@@ -1,0 +1,14 @@
+{
+  "name": "bt",
+  "version": "1.0.0",
+  "description": "Bluetooth POC",
+  "main": "index.js",
+  "dependencies": {
+  	"bluetooth-serial-port": "*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
