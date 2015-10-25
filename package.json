@@ -4,7 +4,7 @@
   "description": "Bluetooth POC",
   "main": "index.js",
   "dependencies": {
-  	"bluetooth-serial-port": "*"
+  	"serialport": "*"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

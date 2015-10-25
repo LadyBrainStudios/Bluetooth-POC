@@ -1,35 +1,26 @@
-var btSerial = new (require('bluetooth-serial-port')).BluetoothSerialPort();
+var SerialPort = require("serialport").SerialPort
+var serialPort = new SerialPort("/dev/tty-usbserial1", {
+  baudrate: 57600
+}, false); // this is the openImmediately flag [default is true]
 
-btSerial.on('found', function(address, name) {
-    btSerial.findSerialPortChannel(address, function(channel) {
-        btSerial.connect(address, channel, function() {
-            console.log('connected');
-
-            writeToBT("AX#CA");
-
-            btSerial.on('data', function(buffer) {
-                if(/^II$/.test(buffer)){
-                	writeToBT("AX#CC");
-                }
-                if(/^IV$/.test(buffer)){
-                	console.log("audioConnecte!");
-                }
-            });
-        }, function () {
-            console.log('cannot connect');
-        });
-
-        // close the connection when you're ready
-        btSerial.close();
-    }, function() {
-        console.log('found nothing');
+serialPort.open(function (error) {
+  if ( error ) {
+    console.log('failed to open: '+error);
+  } else {
+    console.log('open');
+    serialPort.on('data', function(data) {
+      console.log('data received: ' + data);
+      if(data === "II"){
+      	serialPort.write("AT#CC\r\n");
+      }
+      if(data === "IV"){
+      	console.log("Paired");
+      //	serialPort.write("AT#CC\r\n");
+      }
     });
+    serialPort.write("AT#CA\r\n", function(err, results) {
+      console.log('err ' + err);
+      console.log('results ' + results);
+    });
+  }
 });
-
-btSerial.inquire();
-
-function writeToBT(btCommand){
-	btSerial.write(new Buffer(btCommand, 'utf-8'), function(err, bytesWritten) {            	
-    if (err) console.log(err);
-  });
-}
